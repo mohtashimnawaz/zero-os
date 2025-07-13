@@ -1,3 +1,92 @@
+type FileInfo = record {
+    id: text;
+    name: text;
+    file_type: text;
+    size: nat64;
+    created_at: nat64;
+    updated_at: nat64;
+    parent_folder: opt text;
+    owner: principal;
+    content_chunks: vec text;
+    is_folder: bool;
+    metadata: vec record { text; text };
+};
+
+type FileChunk = record {
+    id: text;
+    file_id: text;
+    chunk_index: nat32;
+    data: vec nat8;
+};
+
+type Note = record {
+    id: text;
+    title: text;
+    content: text;
+    created_at: nat64;
+    updated_at: nat64;
+    owner: principal;
+    tags: vec text;
+};
+
+type Task = record {
+    id: text;
+    title: text;
+    description: text;
+    completed: bool;
+    created_at: nat64;
+    updated_at: nat64;
+    due_date: opt nat64;
+    owner: principal;
+    priority: text;
+};
+
+type Result_FileInfo = variant {
+    Ok: FileInfo;
+    Err: text;
+};
+
+type Result_FileChunk = variant {
+    Ok: FileChunk;
+    Err: text;
+};
+
+type Result_Note = variant {
+    Ok: Note;
+    Err: text;
+};
+
+type Result_Task = variant {
+    Ok: Task;
+    Err: text;
+};
+
+type Result_Unit = variant {
+    Ok;
+    Err: text;
+};
+
 service : {
-    "greet": (text) -> (text) query;
+    // File system operations
+    "create_folder": (text, opt text) -> (Result_FileInfo);
+    "upload_file_chunk": (text, nat32, vec nat8, text, text, nat64, opt text) -> (variant { Ok: text; Err: text });
+    "get_file_info": (text) -> (Result_FileInfo) query;
+    "get_file_chunk": (text) -> (Result_FileChunk) query;
+    "list_files": (opt text) -> (vec FileInfo) query;
+    "delete_file": (text) -> (Result_Unit);
+    
+    // Notes operations
+    "create_note": (text, text, vec text) -> (Result_Note);
+    "update_note": (text, text, text, vec text) -> (Result_Note);
+    "get_notes": () -> (vec Note) query;
+    "delete_note": (text) -> (Result_Unit);
+    
+    // Task operations
+    "create_task": (text, text, opt nat64, text) -> (Result_Task);
+    "update_task": (text, text, text, bool, opt nat64, text) -> (Result_Task);
+    "get_tasks": () -> (vec Task) query;
+    "delete_task": (text) -> (Result_Unit);
+    
+    // System info
+    "get_user_storage_info": () -> (vec record { text; nat64 }) query;
 }
