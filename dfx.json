@@ -1,0 +1,27 @@
+{
+  "canisters": {
+    "zero_os_backend": {
+      "candid": "src/zero_os_backend/zero_os_backend.did",
+      "package": "zero_os_backend",
+      "type": "rust"
+    },
+    "zero_os_frontend": {
+      "dependencies": [
+        "zero_os_backend"
+      ],
+      "source": [
+        "src/zero_os_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "zero_os_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

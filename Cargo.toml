@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/zero_os_backend"
+]
+resolver = "2"
