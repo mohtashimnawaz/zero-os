@@ -103,7 +103,7 @@ export const FileSystemProvider: React.FC<FileSystemProviderProps> = ({ children
   const initializeActor = async () => {
     try {
       const agent = new HttpAgent({
-        identity,
+        identity: identity || undefined,
         host: process.env.DFX_NETWORK === 'ic' ? 'https://ic0.app' : 'http://localhost:4943',
       });
 
