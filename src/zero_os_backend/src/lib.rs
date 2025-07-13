@@ -2,8 +2,8 @@ use candid::{CandidType, Deserialize, Principal};
 use ic_cdk::api::time;
 use ic_cdk::{init, post_upgrade, pre_upgrade, query, update};
 use ic_stable_structures::memory_manager::{MemoryId, MemoryManager, VirtualMemory};
-use ic_stable_structures::{BTreeMap, DefaultMemoryImpl, StableBTreeMap, Storable};
-use serde::{Deserialize as SerdeDeserialize, Serialize};
+use ic_stable_structures::{DefaultMemoryImpl, StableBTreeMap, Storable};
+use serde::Serialize;
 use sha2::{Digest, Sha256};
 use std::borrow::Cow;
 use std::cell::RefCell;
@@ -12,7 +12,7 @@ use std::collections::HashMap;
 type Memory = VirtualMemory<DefaultMemoryImpl>;
 
 // File system structures
-#[derive(CandidType, Deserialize, Serialize, SerdeDeserialize, Clone, Debug)]
+#[derive(CandidType, Deserialize, Serialize, Clone, Debug)]
 pub struct FileInfo {
     pub id: String,
     pub name: String,
@@ -27,7 +27,7 @@ pub struct FileInfo {
     pub metadata: HashMap<String, String>,
 }
 
-#[derive(CandidType, Deserialize, Serialize, SerdeDeserialize, Clone, Debug)]
+#[derive(CandidType, Deserialize, Serialize, Clone, Debug)]
 pub struct FileChunk {
     pub id: String,
     pub file_id: String,
@@ -35,7 +35,7 @@ pub struct FileChunk {
     pub data: Vec<u8>,
 }
 
-#[derive(CandidType, Deserialize, Serialize, SerdeDeserialize, Clone, Debug)]
+#[derive(CandidType, Deserialize, Serialize, Clone, Debug)]
 pub struct Note {
     pub id: String,
     pub title: String,
@@ -46,7 +46,7 @@ pub struct Note {
     pub tags: Vec<String>,
 }
 
-#[derive(CandidType, Deserialize, Serialize, SerdeDeserialize, Clone, Debug)]
+#[derive(CandidType, Deserialize, Serialize, Clone, Debug)]
 pub struct Task {
     pub id: String,
     pub title: String,
@@ -68,6 +68,8 @@ impl Storable for FileInfo {
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_json::from_slice(&bytes).unwrap()
     }
+
+    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
 }
 
 impl Storable for FileChunk {
@@ -78,6 +80,8 @@ impl Storable for FileChunk {
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_json::from_slice(&bytes).unwrap()
     }
+
+    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
 }
 
 impl Storable for Note {
@@ -88,6 +92,8 @@ impl Storable for Note {
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_json::from_slice(&bytes).unwrap()
     }
+
+    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
 }
 
 impl Storable for Task {
@@ -98,6 +104,8 @@ impl Storable for Task {
     fn from_bytes(bytes: Cow<[u8]>) -> Self {
         serde_json::from_slice(&bytes).unwrap()
     }
+
+    const BOUND: ic_stable_structures::storable::Bound = ic_stable_structures::storable::Bound::Unbounded;
 }
 
 // Global state
