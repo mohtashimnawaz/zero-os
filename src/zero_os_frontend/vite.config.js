@@ -9,13 +9,28 @@ dotenv.config({ path: '../../.env' });
 export default defineConfig({
   build: {
     emptyOutDir: true,
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'dfinity': ['@dfinity/agent', '@dfinity/auth-client', '@dfinity/candid', '@dfinity/principal'],
+        }
+      }
+    }
   },
   optimizeDeps: {
     esbuildOptions: {
       define: {
         global: "globalThis",
       },
+      target: 'esnext',
     },
+    exclude: [
+      '@dfinity/agent',
+      '@dfinity/auth-client', 
+      '@dfinity/candid',
+      '@dfinity/principal'
+    ]
   },
   server: {
     proxy: {

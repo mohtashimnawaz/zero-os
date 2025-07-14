@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Actor, HttpAgent } from '@dfinity/agent';
+import type { Actor, HttpAgent } from '@dfinity/agent';
 import { idlFactory } from '../../../declarations/zero_os_backend';
 import { useAuth } from './AuthContext';
 import toast from 'react-hot-toast';
@@ -104,6 +104,9 @@ export const FileSystemProvider: React.FC<FileSystemProviderProps> = ({ children
 
   const initializeActor = async () => {
     try {
+      // Use dynamic import to avoid bundling issues
+      const { Actor, HttpAgent } = await import('@dfinity/agent');
+      
       const agent = new HttpAgent({
         identity: identity || undefined,
         host: import.meta.env.VITE_DFX_NETWORK === 'ic' ? 'https://ic0.app' : 'http://localhost:4943',
