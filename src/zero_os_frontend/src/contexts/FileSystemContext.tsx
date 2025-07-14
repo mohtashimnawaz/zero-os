@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Actor, HttpAgent } from '@dfinity/agent';
-import { idlFactory } from '../declarations/zero_os_backend';
+import { idlFactory } from '../../../declarations/zero_os_backend';
 import { useAuth } from './AuthContext';
 import toast from 'react-hot-toast';
 
@@ -42,10 +42,12 @@ export interface Task {
 
 interface FileSystemContextType {
   files: FileInfo[];
+  folders: FileInfo[];
   notes: Note[];
   tasks: Task[];
   currentFolder: string | null;
   isLoading: boolean;
+  loading: boolean;
   // File operations
   createFolder: (name: string, parentFolder?: string) => Promise<void>;
   uploadFile: (file: File, parentFolder?: string) => Promise<void>;
@@ -111,7 +113,7 @@ export const FileSystemProvider: React.FC<FileSystemProviderProps> = ({ children
         await agent.fetchRootKey();
       }
 
-      const canisterId = import.meta.env.VITE_CANISTER_ID_ZERO_OS_BACKEND;
+      const canisterId = import.meta.env.VITE_CANISTER_ID_ZERO_OS_BACKEND || 'rrkah-fqaaa-aaaaa-aaaaq-cai';
       if (!canisterId) {
         throw new Error('Backend canister ID not found');
       }
@@ -403,10 +405,12 @@ export const FileSystemProvider: React.FC<FileSystemProviderProps> = ({ children
 
   const value: FileSystemContextType = {
     files,
+    folders: files.filter(f => f.is_folder),
     notes,
     tasks,
     currentFolder,
     isLoading,
+    loading: isLoading,
     createFolder,
     uploadFile,
     deleteFile,
