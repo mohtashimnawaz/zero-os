@@ -104,14 +104,14 @@ export const FileSystemProvider: React.FC<FileSystemProviderProps> = ({ children
     try {
       const agent = new HttpAgent({
         identity: identity || undefined,
-        host: process.env.DFX_NETWORK === 'ic' ? 'https://ic0.app' : 'http://localhost:4943',
+        host: import.meta.env.VITE_DFX_NETWORK === 'ic' ? 'https://ic0.app' : 'http://localhost:4943',
       });
 
-      if (process.env.DFX_NETWORK !== 'ic') {
+      if (import.meta.env.VITE_DFX_NETWORK !== 'ic') {
         await agent.fetchRootKey();
       }
 
-      const canisterId = process.env.CANISTER_ID_ZERO_OS_BACKEND;
+      const canisterId = import.meta.env.VITE_CANISTER_ID_ZERO_OS_BACKEND;
       if (!canisterId) {
         throw new Error('Backend canister ID not found');
       }
